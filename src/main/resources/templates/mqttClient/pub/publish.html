@@ -7,10 +7,20 @@
 </head>
 <body>
 <div>
-    <input th:value="${session.pubClient}" style="width: 500px" readonly>
+    <input th:value="${session.pubClient}" style="width: 500px;" readonly>
+    <button id="closeBtn">CLOSE</button>
+</div>
+
+
+<div style="margin-top: 500px;">
+    <input type="text" name="topic" id="topic" th:value="${topic}" readonly>
+
+    <input type="text" name="msg" id="msg">
+    <button type="button" id="send">전송</button>
+
 
 </div>
-<button id="closeBtn">CLOSE</button>
+
 </body>
 
 <script>
@@ -19,6 +29,32 @@
 
         $('#closeBtn').click(function (){
             location.href = '/mqtt/close';
+        })
+
+        $('#send').click(function (){
+
+            var topic = $('#topic').val();
+            var msg = $('#msg').val();
+
+
+
+            var request = $.ajax({
+                url: "/api/mqtt/send",
+                method: "POST",
+                data: { topic : topic,
+                        msg : msg },
+                dataType: "text"
+
+            });
+
+            request.done(function( result ) {
+                console.log(result);
+            });
+
+            request.fail(function( result ) {
+                console.log(result);
+            });
+
         })
 
 

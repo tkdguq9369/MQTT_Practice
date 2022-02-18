@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-public class PubClient implements Client {
+public class PubClient{
 
     private MqttClient pubClient;
 
@@ -42,6 +42,7 @@ public class PubClient implements Client {
             MqttMessage message = new MqttMessage();
             message.setPayload(msg.getBytes());
             pubClient.publish(topic, message);
+            System.out.println(topic+ "   " + msg);
         } catch (MqttPersistenceException e) {
             e.printStackTrace();
         } catch (MqttException e) {

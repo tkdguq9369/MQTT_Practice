@@ -30,7 +30,7 @@ public class MqttController {
     }
 
     @PostMapping("/pubClient")
-    public String pubClient(String ip, String topic, HttpSession session) {
+    public String pubClient(String ip, String topic, HttpSession session, Model model) {
         System.out.println("postPub");
         System.out.println(ip + "  " + topic);
 
@@ -43,6 +43,7 @@ public class MqttController {
 
         System.out.println(pubClient.toString());
 
+        model.addAttribute("topic", topic);
 
         return "mqttClient/pub/publish";
     }
@@ -70,10 +71,8 @@ public class MqttController {
         pubClient = (PubClient) session.getAttribute("pubClient");
 
         pubClient.close();
-
+        pubClient = null;
         session.removeAttribute("pubClient");
-
-        System.out.println(pubClient.toString());
 
         return "redirect:/mqtt/pubClient";
 
