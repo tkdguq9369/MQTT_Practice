@@ -1,6 +1,5 @@
 package com.mqtt.model;
 
-
 import org.eclipse.paho.client.mqttv3.*;
 
 public class SubClient implements MqttCallback {

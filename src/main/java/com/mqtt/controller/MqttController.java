@@ -3,11 +3,14 @@ package com.mqtt.controller;
 import com.mqtt.model.PubClient;
 import com.mqtt.model.SubClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpSession;
 
 
 @Controller
@@ -15,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MqttController {
 
 
-
     private PubClient pubClient;
+
     private SubClient subClient;
 
     @GetMapping("/pubClient")
@@ -27,19 +30,25 @@ public class MqttController {
     }
 
     @PostMapping("/pubClient")
-    public String pubClient(String ip, String topic, Model model) {
+    public String pubClient(String ip, String topic, HttpSession session) {
         System.out.println("postPub");
         System.out.println(ip + "  " + topic);
 
-        pubClient = new PubClient(ip, topic);
+        pubClient = (PubClient) session.getAttribute("pubClient");
+
+        if(pubClient == null){
+            pubClient = new PubClient(ip, topic);
+            session.setAttribute("pubClient", pubClient);
+        }
 
         System.out.println(pubClient.toString());
-
-        model.addAttribute("pubClient", pubClient);
 
 
         return "mqttClient/pub/publish";
     }
+
+
+
     @GetMapping("/subClient")
     public String getSubClientInfo() {
 
@@ -52,5 +61,21 @@ public class MqttController {
         System.out.println("postSub");
         System.out.println(ip + "  " + topic);
         return "mqttClient/sub/subscribe";
+    }
+
+
+    @GetMapping("/close")
+    public String close(HttpSession session) {
+
+        pubClient = (PubClient) session.getAttribute("pubClient");
+
+        pubClient.close();
+
+        session.removeAttribute("pubClient");
+
+        System.out.println(pubClient.toString());
+
+        return "redirect:/mqtt/pubClient";
+
     }
 }
