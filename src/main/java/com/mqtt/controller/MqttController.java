@@ -3,6 +3,8 @@ package com.mqtt.controller;
 import com.mqtt.model.PubClient;
 import com.mqtt.model.SubClient;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,14 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 
-
 @Controller
 @RequestMapping("/mqtt")
 public class MqttController {
 
-
     private PubClient pubClient;
-
     private SubClient subClient;
 
     @GetMapping("/pubClient")
@@ -49,7 +48,6 @@ public class MqttController {
     }
 
 
-
     @GetMapping("/subClient")
     public String getSubClientInfo() {
 
@@ -74,7 +72,7 @@ public class MqttController {
         pubClient = null;
         session.removeAttribute("pubClient");
 
-        return "redirect:/mqtt/pubClient";
+        return "redirect:/";
 
     }
 }
