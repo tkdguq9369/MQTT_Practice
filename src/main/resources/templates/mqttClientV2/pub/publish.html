@@ -20,7 +20,7 @@
 
         //접속 실패
         function onFailure(message){
-            console.log("접속실패");
+            console.log("접속실패 : " + message);
             setTimeout(mqttConnection, reconnectTimeout);
         }
 
