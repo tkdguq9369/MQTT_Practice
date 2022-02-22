@@ -4,8 +4,6 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 
 public class PubClient{
@@ -19,12 +17,10 @@ public class PubClient{
 
             try {
                 if (pubClient == null) {
-                    this.broker = broker;
                     this.topic = topic;
-
-                    broker = "tcp://" + broker + ":1883";
-                    System.out.println(broker);
-                    pubClient = new MqttClient(broker, topic);
+                    this.broker = "tcp://" + broker + ":1883";
+                    System.out.println(getBroker());
+                    pubClient = new MqttClient(getBroker(), getTopic());
                 }
                 pubClient.connect();
 
@@ -62,5 +58,19 @@ public class PubClient{
 
     }
 
+    public String getBroker() {
+        return broker;
+    }
 
+    public void setBroker(String broker) {
+        this.broker = broker;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 }

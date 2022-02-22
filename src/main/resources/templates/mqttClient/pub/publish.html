@@ -3,11 +3,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Pub</title>
 </head>
 <body>
 <div>
     <input th:value="${session.pubClient}" style="width: 500px;" readonly>
+    <input th:value="${pubClient.getBroker()}" style="width: 50px;" readonly>
+    <input th:value="${pubClient.getTopic()}" style="width: 50px;" readonly>
     <button id="closeBtn">CLOSE</button>
 </div>
 
@@ -25,43 +27,41 @@
 
 <script>
 
-    $(document).ready(function(){
+    $(document).ready(function () {
 
-        $('#closeBtn').click(function (){
-            location.href = '/mqtt/close';
+        $('#closeBtn').click(function () {
+            location.href = '/mqtt/close_pub';
         })
 
-        $('#send').click(function (){
+        $('#send').click(function () {
 
             var topic = $('#topic').val();
             var msg = $('#msg').val();
 
 
-
             var request = $.ajax({
                 url: "/api/mqtt/send",
                 method: "POST",
-                data: { topic : topic,
-                        msg : msg },
+                data: {
+                    topic: topic,
+                    msg: msg
+                },
                 dataType: "text"
 
             });
 
-            request.done(function( result ) {
+            request.done(function (result) {
                 console.log(result);
             });
 
-            request.fail(function( result ) {
+            request.fail(function (result) {
                 console.log(result);
             });
 
         })
 
 
-
     })
-
-
 
 
 </script>

@@ -2,9 +2,6 @@ package com.mqtt.controller;
 
 import com.mqtt.model.PubClient;
 import com.mqtt.model.SubClient;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +40,7 @@ public class MqttController {
         System.out.println(pubClient.toString());
 
         model.addAttribute("topic", topic);
-
+        model.addAttribute("pubClient", pubClient);
         return "mqttClient/pub/publish";
     }
 
@@ -56,21 +53,48 @@ public class MqttController {
     }
 
     @PostMapping("/subClient")
-    public String subClient(String ip, String topic) {
+    public String subClient(String ip, String topic, HttpSession session, Model model) {
         System.out.println("postSub");
         System.out.println(ip + "  " + topic);
+
+        subClient = (SubClient) session.getAttribute("subClient");
+
+        if(subClient == null){
+
+            subClient = new SubClient();
+            subClient.init(ip, topic);
+
+            session.setAttribute("subClient", subClient);
+        }
+
+        System.out.println(subClient.toString());
+
+        model.addAttribute("topic", topic);
+        model.addAttribute("subClient", subClient);
         return "mqttClient/sub/subscribe";
     }
 
 
-    @GetMapping("/close")
-    public String close(HttpSession session) {
+    @GetMapping("/close_pub")
+    public String close_pub(HttpSession session) {
 
         pubClient = (PubClient) session.getAttribute("pubClient");
 
         pubClient.close();
         pubClient = null;
         session.removeAttribute("pubClient");
+
+        return "redirect:/";
+
+    }
+
+    @GetMapping("/close_sub")
+    public String close_sub(HttpSession session) {
+
+        subClient = (SubClient) session.getAttribute("subClient");
+        subClient.close();
+        subClient = null;
+        session.removeAttribute("subClient");
 
         return "redirect:/";
 
