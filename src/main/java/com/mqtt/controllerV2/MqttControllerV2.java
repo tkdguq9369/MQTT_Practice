@@ -31,8 +31,9 @@ public class MqttControllerV2 {
     }
 
     @PostMapping("/sub")
-    public String subClient() {
-
+    public String subClient(String ip, String topic, Model model) {
+        model.addAttribute("ip", ip);
+        model.addAttribute("topic", topic);
         return "mqttClientV2/sub/subscribe";
     }
 }
