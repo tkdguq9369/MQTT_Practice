@@ -16,12 +16,14 @@ public class MqttControllerV2 {
     }
 
     @PostMapping("/pub")
-    public String pubClient(String ip, String topic, Model model) {
+    public String pubClient(String ip, String clientID, String topic, Model model) {
 
         model.addAttribute("ip", ip);
+        model.addAttribute("clientID", clientID);
         model.addAttribute("topic", topic);
 
         return "mqttClientV2/pub/publish";
+
     }
 
     @GetMapping("/sub")
@@ -31,8 +33,9 @@ public class MqttControllerV2 {
     }
 
     @PostMapping("/sub")
-    public String subClient(String ip, String topic, Model model) {
+    public String subClient(String ip, String clientID, String topic, Model model) {
         model.addAttribute("ip", ip);
+        model.addAttribute("clientID", clientID);
         model.addAttribute("topic", topic);
         return "mqttClientV2/sub/subscribe";
     }

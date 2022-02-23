@@ -14,7 +14,7 @@
         var port = 9001;
 
         var topic = '[[${topic}]]';
-
+        var clientID = '[[${clientID}]]';
 
         // 접속 성공
         function onConnect() {
@@ -28,20 +28,26 @@
             setTimeout(mqttConnection, reconnectTimeout);
         }
 
-        var today = new Date();
+        function getDate() {
+            var today = new Date();
 
-        var hours = ('0' + today.getHours()).slice(-2);
-        var minutes = ('0' + today.getMinutes()).slice(-2);
-        var seconds = ('0' + today.getSeconds()).slice(-2);
+            var hours = ('0' + today.getHours()).slice(-2);
+            var minutes = ('0' + today.getMinutes()).slice(-2);
+            var seconds = ('0' + today.getSeconds()).slice(-2);
 
-        var timeString = hours + ':' + minutes  + ':' + seconds;
+            var timeString = hours + ':' + minutes  + ':' + seconds;
+            return timeString;
+        }
+
+
 
         //메시지 도착 함수
         function onMessageArrived(message) {
             console.log("메시지 도착: " + message.payloadString);
-
+            console.log(message)
             var html = '<span>';
-                html += timeString + ' : ';
+                html += getDate() + ' : ';
+                html += message.destinationName  + ' : ';
                 html += message.payloadString;
                 html += '</span></br>';
 
@@ -53,7 +59,7 @@
 
         function mqttConnection() {
             //uri/host/port/path/clientId
-            mqtt = new Paho.MQTT.Client(location.hostname, Number(port), "testID");
+            mqtt = new Paho.MQTT.Client(location.hostname, Number(port), clientID);
             var options = {
                 timeout : 3,
                 onSuccess:onConnect,
@@ -73,6 +79,7 @@
 </script>
 <div>
     ip : <input th:value="${ip}" style="width: 100px;" readonly> </br>
+    clientID : <input th:value="${clientID}" style="width: 100px;" readonly> </br>
     topic : <input th:value="${topic}" style="width: 100px;" readonly>
     <button id="closeBtn">CLOSE</button>
 </div>

@@ -14,7 +14,7 @@
         var port = 9001;
 
         var topic = '[[${topic}]]';
-
+        var clientID = '[[${clientID}]]';
 
         // 접속 성공
         function onConnect() {
@@ -29,7 +29,7 @@
 
         function mqttConnection() {
             //uri/host/port/path/clientId
-            mqtt = new Paho.MQTT.Client(location.hostname, Number(port), "clientID");
+            mqtt = new Paho.MQTT.Client(location.hostname, Number(port), clientID);
             var options = {
                 timeout : 3,
                 onSuccess:onConnect,
@@ -60,6 +60,7 @@
 
 <div>
     ip : <input th:value="${ip}" style="width: 100px;" readonly> </br>
+    clientID : <input th:value="${clientID}" style="width: 100px;" readonly> </br>
     topic : <input th:value="${topic}" style="width: 100px;" readonly>
     <button id="closeBtn">CLOSE</button>
 </div>
