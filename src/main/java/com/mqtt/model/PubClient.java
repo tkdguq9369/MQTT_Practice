@@ -19,11 +19,11 @@ public class PubClient{
                 if (pubClient == null) {
                     this.topic = topic;
                     this.broker = "tcp://" + broker + ":1883";
-                    System.out.println(getBroker());
+
                     pubClient = new MqttClient(getBroker(), getTopic());
                 }
                 pubClient.connect();
-
+                System.out.println(this.broker);
             } catch (MqttException e) {
                 e.printStackTrace();
             }

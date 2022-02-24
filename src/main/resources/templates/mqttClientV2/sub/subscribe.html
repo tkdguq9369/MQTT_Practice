@@ -63,6 +63,7 @@
             var options = {
                 timeout : 3,
                 onSuccess:onConnect,
+                cleanSession: cleansession,
                 onFailure:onFailure
             };
             mqtt.onMessageArrived = onMessageArrived;
