@@ -9,10 +9,13 @@
     <script type="text/javascript">
         var mqtt;
         var reconnectTimeout = 2000;
-        var host ='[[${ip}]]';
-        //var port = 1883;
+        var host = "192.168.200.19";
+        //var host ='[[${ip}]]';
+        console.log(location.hostname)
+        var port = 9001;
+
         //var host = "broker.hivemq.com";
-        var port = 8000;
+        //var port = 8000;
 
         var topic = '[[${topic}]]';
         var clientID = '[[${clientID}]]';
@@ -25,7 +28,7 @@
 
         //접속 실패
         function onFailure(message){
-            console.log("접속실패 : " + message);
+            console.log("접속실패 : " + message.errorMessage);
             setTimeout(mqttConnection, reconnectTimeout);
         }
 
@@ -45,7 +48,6 @@
         //메시지 도착 함수
         function onMessageArrived(message) {
             console.log("메시지 도착: " + message.payloadString);
-            console.log(message)
             var html = '<span>';
                 html += getDate() + ' : ';
                 html += message.destinationName  + ' : ';
