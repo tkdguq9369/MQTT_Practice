@@ -9,9 +9,9 @@
     <script type="text/javascript">
         var mqtt;
         var reconnectTimeout = 2000;
-        var host = "10.138.0.2";
+        var host = "35.230.63.234";
         //var host ='[[${ip}]]';
-        console.log(location.hostname)
+
         var port = 9001;
 
         //var host = "broker.hivemq.com";
@@ -81,7 +81,7 @@
     mqttConnection();
 </script>
 <div>
-    ip : <input th:value="${ip}" style="width: 100px;" readonly> </br>
+    broker server ip : <input th:value="${ip}" style="width: 100px;" readonly> </br>
     clientID : <input th:value="${clientID}" style="width: 100px;" readonly> </br>
     topic : <input th:value="${topic}" style="width: 100px;" readonly>
     <button id="closeBtn">CLOSE</button>

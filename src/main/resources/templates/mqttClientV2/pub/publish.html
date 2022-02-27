@@ -9,7 +9,7 @@
     <script type="text/javascript">
         var mqtt;
         var reconnectTimeout = 2000;
-        var host ='[[${ip}]]';
+        var host = '[[${ip}]]';
         var port = 9001;
 
         //var host = "broker.hivemq.com";
@@ -24,7 +24,7 @@
         }
 
         //접속 실패
-        function onFailure(message){
+        function onFailure(message) {
             console.log("접속실패 : " + message);
             setTimeout(mqttConnection, reconnectTimeout);
         }
@@ -33,16 +33,16 @@
             //uri/host/port/path/clientId
             mqtt = new Paho.MQTT.Client(host, port, clientID);
             var options = {
-                timeout : 3,
-                onSuccess:onConnect,
-                onFailure:onFailure
+                timeout: 3,
+                onSuccess: onConnect,
+                onFailure: onFailure
             };
 
             mqtt.connect(options);
         }
 
-        $(document).ready(function() {
-            $('#send').click(function() {
+        $(document).ready(function () {
+            $('#send').click(function () {
                 var m = $('#msg').val();
                 var msg = new Paho.MQTT.Message(m);
                 msg.destinationName = topic;
@@ -61,7 +61,7 @@
 
 
 <div>
-    ip : <input th:value="${ip}" style="width: 100px;" readonly> </br>
+    broker server ip : <input th:value="${ip}" style="width: 100px;" readonly> </br>
     clientID : <input th:value="${clientID}" style="width: 100px;" readonly> </br>
     topic : <input th:value="${topic}" style="width: 100px;" readonly>
     <button id="closeBtn">CLOSE</button>
@@ -78,7 +78,6 @@
 </div>
 
 </body>
-
 
 
 </html>
