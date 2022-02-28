@@ -9,10 +9,15 @@
     <script type="text/javascript">
         var mqtt;
         var reconnectTimeout = 2000;
-        var host = "35.230.63.234";
-        //var host ='[[${ip}]]';
-
+        //var host = "35.230.63.234";
+        var host ='[[${ip}]]';
         var port = 9001;
+
+        // 임시 저장용 변수
+        var tempA;
+        var tempB;
+
+        var testSwitch = false;
 
         //var host = "broker.hivemq.com";
         //var port = 8000;
@@ -23,7 +28,13 @@
         // 접속 성공
         function onConnect() {
             console.log("접속완료");
+            initArr();
             mqtt.subscribe(topic);
+        }
+
+        function initArr() {
+            tempA = new Array();
+            tempB = new Array();
         }
 
         //접속 실패
@@ -47,22 +58,33 @@
 
         //메시지 도착 함수
         function onMessageArrived(message) {
-            console.log("메시지 도착: " + message.payloadString);
+
+            // 받은 메시지 오브젝트화
+            var getMsg = JSON.parse(message.payloadString);
+
+            console.log("메시지 도착: " + getMsg.minutes + " " + getMsg.seconds);
+
             var html = '<span>';
                 html += getDate() + ' : ';
                 html += message.destinationName  + ' : ';
-                html += message.payloadString;
+                html += getMsg.minutes + " " + getMsg.seconds;
                 html += '</span></br>';
 
 
             $('#msgBox').append(html);
+
+            if(testSwitch == false) {
+                tempA.push(getMsg);
+            }else {
+                tempB.push(getMsg);
+            }
 
         }
 
 
         function mqttConnection() {
             //uri/host/port/path/clientId
-            mqtt = new Paho.MQTT.Client(host, port, clientID);
+            mqtt = new Paho.MQTT.Client(location.hostname, port, clientID);
             var options = {
                 timeout : 3,
                 onSuccess:onConnect,
@@ -72,6 +94,28 @@
 
             mqtt.connect(options);
         }
+
+        // 배열 저장 스위치 테스트
+
+        $(document).ready(function() {
+
+            $('#switchBtn').click(function(){
+                if(testSwitch == false) {
+                    console.log("======tempB에 저장 시작======");
+                    console.log("tempA : " + JSON.stringify(tempA));
+                    tempA = [];
+                    // 배열 A관련 평균값 처리 및 csv 다운로드 처리
+                    testSwitch = true;
+                }else {
+                    console.log("======tempA에 저장 시작======");
+                    console.log("tempB : " + JSON.stringify(tempB));
+                    tempB = [];
+                    // 배열 B관련 평균값 처리 및 csv 다운로드 처리
+                    testSwitch = false;
+                }
+            })
+        })
+
 
     </script>
 </head>
@@ -85,6 +129,8 @@
     clientID : <input th:value="${clientID}" style="width: 100px;" readonly> </br>
     topic : <input th:value="${topic}" style="width: 100px;" readonly>
     <button id="closeBtn">CLOSE</button>
+    <button id="switchBtn">SWITCH</button>
+
 </div>
 
 <div id = "msgBox">

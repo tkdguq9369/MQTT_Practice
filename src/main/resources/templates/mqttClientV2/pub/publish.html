@@ -43,11 +43,35 @@
 
         $(document).ready(function () {
             $('#send').click(function () {
-                var m = $('#msg').val();
-                var msg = new Paho.MQTT.Message(m);
-                msg.destinationName = topic;
-                mqtt.send(msg);
+               // var m = $('#msg').val();
+               // var msg = new Paho.MQTT.Message(m);
+
+               // msg.destinationName = topic;
+                //mqtt.send(msg);
+
+                setInterval(function (){
+                    test()
+                }, 5000);
             })
+
+
+
+            function test() {
+                var today = new Date();
+                var minutes = ('0' + today.getMinutes()).slice(-2);
+                var seconds = ('0' + today.getSeconds()).slice(-2);
+                var data = new Object();
+                data.minutes = minutes;
+                data.seconds = seconds;
+
+                var m = JSON.stringify(data);
+                console.log(m);
+                var msg = new Paho.MQTT.Message(m);
+
+                msg.destinationName = topic;
+                msg.qos = 2;
+                mqtt.send(msg);
+            }
         })
 
 
