@@ -67,6 +67,7 @@
         //메시지 도착 함수
          function onMessageArrived(message) {
 
+            // 1시간 ( 3600초 )
             if(count == 3600){
                 switchArr();
                 count = 0;
@@ -110,7 +111,7 @@
             mqtt.connect(options);
         }
 
-        // TEST 2
+        // TEST 2 배열 평균값 구하기
         function arrAvg(arr) {
             console.log(arr.length)
             var aAvg = 0;
@@ -126,14 +127,16 @@
             tObj.tempAvg = (aAvg / arr.length).toFixed(1);
             tObj.humAvg = (bAvg / arr.length).toFixed(1);
             console.log(tObj);
+            console.log("======평균값 저장======");
         }
 
-        // TEST 1
+        // TEST 1 저장 배열 스위칭
         function switchArr() {
             if (testSwitch == false) {
                 console.log("tempA : " + JSON.stringify(tempA));
                 console.log("======tempB에 저장 시작======");
                 arrAvg(tempA);
+                getCSV(tempA);
                 tempA = [];
                 // 배열 A관련 평균값 처리 및 csv 다운로드 처리
                 testSwitch = true;
@@ -141,6 +144,7 @@
                 console.log("tempB : " + JSON.stringify(tempB));
                 console.log("======tempA에 저장 시작======");
                 arrAvg(tempB);
+                getCSV(tempB);
                 tempB = [];
                 // 배열 B관련 평균값 처리 및 csv 다운로드 처리
                 testSwitch = false;
@@ -154,22 +158,66 @@
             $('#switchBtn').click(function () {
                 if (testSwitch == false) {
                     console.log("tempA : " + JSON.stringify(tempA));
-                    arrAvg(tempA);
                     console.log("======tempB에 저장 시작======");
-                    tempA = [];
+                    arrAvg(tempA);
+                    getCSV(tempA);
                     // 배열 A관련 평균값 처리 및 csv 다운로드 처리
+                    tempA = [];
                     testSwitch = true;
                 } else {
                     console.log("tempB : " + JSON.stringify(tempB));
                     console.log("======tempA에 저장 시작======");
                     arrAvg(tempB);
-                    tempB = [];
+                    getCSV(tempB);
                     // 배열 B관련 평균값 처리 및 csv 다운로드 처리
+                    tempB = [];
                     testSwitch = false;
                 }
             })
         })
 
+        function getCSV(arr) {
+            var filename = 'csvTest'
+            var csv = [];
+            var row = [];
+
+            //1열에는 컬럼명
+            row.push(
+                "온도",
+                "습도"
+            );
+
+            csv.push(row.join(","));
+
+            for(var i = 0; i < arr.length; i++){
+                row = [];
+                row.push(
+                    arr[i].temperature,
+                    arr[i].humidity
+                )
+                csv.push(row.join(","));
+            }
+
+
+            downloadCSV(csv.join("\n"), filename);
+            console.log("======CSV파일 다운로드 완료======");
+        }
+        function downloadCSV(csv, filename) {
+            var csvFile;
+            var downloadLink;
+
+            //한글 처리를 해주기 위해 BOM 추가하기
+            const BOM = "\uFEFF";
+            csv = BOM + csv;
+
+            csvFile = new Blob([csv], { type: "text/csv" });
+            downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        }
 
 
     </script>
