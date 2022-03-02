@@ -23,6 +23,11 @@
             console.log("접속완료");
         }
 
+        function onConnectionLost(error) {
+            console.log("접속이 끊김 : " + error.errorMessage);
+            setTimeout(mqttConnection, reconnectTimeout);
+        }
+
         //접속 실패
         function onFailure(message) {
             console.log("접속실패 : " + message);
@@ -37,7 +42,7 @@
                 onSuccess: onConnect,
                 onFailure: onFailure
             };
-
+            mqtt.onConnectionLost = onConnectionLost;
             mqtt.connect(options);
         }
 
@@ -51,25 +56,26 @@
 
                 setInterval(function (){
                     test()
-                }, 5000);
+                }, 1000);
             })
 
 
 
             function test() {
                 var today = new Date();
-                var minutes = ('0' + today.getMinutes()).slice(-2);
-                var seconds = ('0' + today.getSeconds()).slice(-2);
+                // 온도 습도
+                var temperature = Math.floor(Math.random() * 5) + 20;
+                var humidity = Math.floor(Math.random() * 5) + 15;
+
                 var data = new Object();
-                data.minutes = minutes;
-                data.seconds = seconds;
+                data.temperature = temperature;
+                data.humidity = humidity;
 
                 var m = JSON.stringify(data);
                 console.log(m);
                 var msg = new Paho.MQTT.Message(m);
 
                 msg.destinationName = topic;
-                msg.qos = 2;
                 mqtt.send(msg);
             }
         })
