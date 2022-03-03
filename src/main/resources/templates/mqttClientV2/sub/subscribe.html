@@ -177,7 +177,7 @@
         })
 
         function getCSV(arr) {
-            var filename = 'csvTest'
+            var filename = $('#clientID').val()+ "_"+ $('#topic').val();
             var csv = [];
             var row = [];
 
@@ -231,8 +231,8 @@
 
 <div>
     broker server ip : <input th:value="${ip}" style="width: 100px;" readonly> </br>
-    clientID : <input th:value="${clientID}" style="width: 100px;" readonly> </br>
-    topic : <input th:value="${topic}" style="width: 100px;" readonly>
+    clientID : <input th:value="${clientID}" id="clientID" style="width: 100px;" readonly> </br>
+    topic : <input th:value="${topic}" id="topic" style="width: 100px;" readonly>
     <button id="closeBtn">CLOSE</button>
     <button id="switchBtn">SWITCH</button>
 </div>
